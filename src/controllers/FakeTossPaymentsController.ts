@@ -113,21 +113,21 @@ export class FakeTossPaymentsController {
      * {@link ITossVirtualAccountPayment.IStore.__approved} 를 `false` 로 함으로써, 별도
      * 승인이 필요한 이러한 상황을 시뮬레이션 할 수 있다.
      *
-     * @param paymentKey 대상 결제의 {@link ITossPayment.paymentKey}
      * @param input 주문 정보 확인
      * @returns 승인된 결제 정보
      *
      * @author Jeongho Nam - https://github.com/samchon
      */
-    @helper.TypedRoute.Post(":paymentKey")
+    @helper.TypedRoute.Post("confirm")
     public approve(
         @nest.Request() request: express.Request,
-        @helper.TypedParam("paymentKey", "string") paymentKey: string,
         @helper.TypedBody() input: ITossPayment.IApproval,
     ): ITossPayment {
         FakeTossUserAuth.authorize(request);
 
-        const payment: ITossPayment = FakeTossStorage.payments.get(paymentKey);
+        const payment: ITossPayment = FakeTossStorage.payments.get(
+            input.paymentKey,
+        );
         if (payment.orderId !== input.orderId)
             throw new nest.UnprocessableEntityException("Wrong orderId");
         else if (payment.totalAmount !== input.amount)

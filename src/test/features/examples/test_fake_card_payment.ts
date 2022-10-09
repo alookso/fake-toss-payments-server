@@ -44,39 +44,31 @@ export async function test_fake_card_payment(): Promise<void> {
     await exception_must_be_thrown(
         "VirtualTossPaymentsController.approve() with wrong orderId",
         () =>
-            toss.functional.v1.payments.approve(
-                TestConnection.FAKE,
-                payment.paymentKey,
-                {
-                    orderId: "wrong-order-id",
-                    amount: payment.totalAmount,
-                },
-            ),
+            toss.functional.v1.payments.confirm.approve(TestConnection.FAKE, {
+                paymentKey: payment.paymentKey,
+                orderId: "wrong-order-id",
+                amount: payment.totalAmount,
+            }),
     );
 
     // 잘못된 결제 금액으로 승인 처리시, 마찬가지로 불발됨
     await exception_must_be_thrown(
         "VirtualTossPaymentsController.approve() with wrong amount",
         () =>
-            toss.functional.v1.payments.approve(
-                TestConnection.FAKE,
-                payment.paymentKey,
-                {
-                    orderId: payment.orderId,
-                    amount: payment.totalAmount - 100,
-                },
-            ),
+            toss.functional.v1.payments.confirm.approve(TestConnection.FAKE, {
+                paymentKey: payment.paymentKey,
+                orderId: payment.orderId,
+                amount: payment.totalAmount - 100,
+            }),
     );
 
     // 정확한 `orderId` 와 주문 금액을 입력해야 비로소 승인 처리된다.
-    const approved: ITossPayment = await toss.functional.v1.payments.approve(
-        TestConnection.FAKE,
-        payment.paymentKey,
-        {
+    const approved: ITossPayment =
+        await toss.functional.v1.payments.confirm.approve(TestConnection.FAKE, {
+            paymentKey: payment.paymentKey,
             orderId: payment.orderId,
             amount: payment.totalAmount,
-        },
-    );
+        });
     if (approved.approvedAt === null || approved.status !== "DONE")
         throw new Error(
             "Bug on FakeTossPaymentsController.approve(): failed to approve.",

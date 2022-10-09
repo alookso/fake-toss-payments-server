@@ -9,19 +9,19 @@ import { ITossVirtualAccountPayment } from "./ITossVirtualAccountPayment";
 
 /**
  * 결제 정보.
- * 
- * `ITossPayment` 는 토스 페이먼츠의 결제 정보를 형상화한 자료구조이자 유니언 타입의 
+ *
+ * `ITossPayment` 는 토스 페이먼츠의 결제 정보를 형상화한 자료구조이자 유니언 타입의
  * 인터페이스로써, if condition 을 통하여 method 값을 특정하면, 파생 타입이 자동으로
  * 지정된다.
- * 
+ *
  * ```typescript
  * if (payment.method === "카드")
  *     payment.card; // payment be ITossCardPayment
- * ``` 
- * 
+ * ```
+ *
  * @author Jeongho Nam - https://github.com/samchon
  */
-export type ITossPayment 
+export type ITossPayment
     = ITossCardPayment
     | ITossGiftCertificatePayment
     | ITossMobilePhonePayment
@@ -37,9 +37,9 @@ export namespace ITossPayment
      * 결제의 기본 정보.
      */
     export interface IBase<
-            Method extends string, 
+            Method extends string,
             Type extends string,
-            Status extends string 
+            Status extends string
                 = "READY"
                 | "IN_PROGRESS"
                 | "WAITING_FOR_DEPOSIT"
@@ -56,7 +56,7 @@ export namespace ITossPayment
 
         /**
          * 결제 타입.
-         * 
+         *
          *   - NORMAL: 일반 결제
          *   - BILLING: 미리 등록한 카드에 의한 간편 결제.
          */
@@ -64,7 +64,7 @@ export namespace ITossPayment
 
         /**
          * 결제 상태.
-         * 
+         *
          *   - READY
          *   - IN_PROGRESS
          *   - WAITING_FOR_DEPOSIT
@@ -78,7 +78,7 @@ export namespace ITossPayment
 
         /**
          * 가맹점 ID.
-         * 
+         *
          * 현재 tosspayments 가 쓰임.
          */
         mId: string;
@@ -95,28 +95,28 @@ export namespace ITossPayment
 
         /**
          * 주문 식별자 키.
-         * 
+         *
          * 토스 페이먼츠가 아닌, 이를 이용하는 서비스에서 자체적으로 관리하는 식별자 키.
          */
         orderId: string;
 
         /**
          * 거래 건에 대한 고유한 키 값.
-         * 
+         *
          * {@link paymentKey} 와 달리, 이를 사용할 일은 없더라.
          */
         transactionKey: string;
 
         /**
          * 주문 이름.
-         * 
+         *
          * 토스 페이먼츠가 아닌, 이를 이용하는 서비스에서 발급한 주문명.
          */
         orderName: string;
 
         /**
          * 화폐 단위.
-         * 
+         *
          * 현재 토스 페이먼츠는 KRW 만 사용 가능.
          */
         currency: string;
@@ -153,7 +153,7 @@ export namespace ITossPayment
 
         /**
          * 문화비 지출 여부.
-         * 
+         *
          * 도석입, 공연 티켓, 박물관/미술관 입장권 등.
          */
         cultureExpense: boolean;
@@ -188,8 +188,13 @@ export namespace ITossPayment
     export interface IApproval
     {
         /**
+         * 결제 내역의 식별자 번호.
+         */
+        paymentKey: string;
+
+        /**
          * 주문 식별자 키.
-         * 
+         *
          * 토스 페이먼츠가 아닌, 이를 이용하는 서비스에서 자체적으로 관리하는 식별자 키.
          */
         orderId: string;
@@ -202,18 +207,18 @@ export namespace ITossPayment
 
     /**
      * 결제 신청 정보.
-     * 
+     *
      * `ITossPayment.IStore` 는 결제 신청 정보를 형상화한 자료구조이자 유니언 타입의
      * 인터페이스로써, if condition 을 이용하여 대상 method 를 특정하면, 파생 타입이
      * 자동으로 지정된다.
-     * 
+     *
      * ```typescript
      * if (input.method === "card")
      *     input.cardNumber; // input is ITossCardPayment.IStore
      * ```
      */
-    export type IStore 
-        = ITossCardPayment.IStore 
+    export type IStore
+        = ITossCardPayment.IStore
         | ITossBilling.IPaymentStore
         | ITossVirtualAccountPayment.IStore;
 

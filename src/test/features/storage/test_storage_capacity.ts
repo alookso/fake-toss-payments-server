@@ -55,14 +55,11 @@ export async function test_storage_capacity(): Promise<void> {
         assertType<typeof payment>(payment);
 
         // APPROVE THE PAYMENT
-        await toss.functional.v1.payments.approve(
-            TestConnection.FAKE,
-            payment.paymentKey,
-            {
-                orderId,
-                amount,
-            },
-        );
+        await toss.functional.v1.payments.confirm.approve(TestConnection.FAKE, {
+            paymentKey: payment.paymentKey,
+            orderId,
+            amount,
+        });
 
         // TEST THE EXPIRATION
         if (previous !== null)

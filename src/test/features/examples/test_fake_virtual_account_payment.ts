@@ -46,14 +46,12 @@ export async function test_fake_virtual_account_payment(): Promise<ITossVirtualA
     // 결제 요청 승인하기
     //
     // 백엔드 서버에서 해당 건을 승인함으로써, 비로소 해당 결제가 완성된다.
-    const approved: ITossPayment = await toss.functional.v1.payments.approve(
-        TestConnection.FAKE,
-        payment.paymentKey,
-        {
+    const approved: ITossPayment =
+        await toss.functional.v1.payments.confirm.approve(TestConnection.FAKE, {
+            paymentKey: payment.paymentKey,
             orderId: payment.orderId,
             amount: payment.totalAmount,
-        },
-    );
+        });
     assertType<ITossVirtualAccountPayment>(
         approved as ITossVirtualAccountPayment,
     );
